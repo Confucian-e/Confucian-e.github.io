@@ -4,7 +4,7 @@
   
   
   <entry>
-    <title>Solidity Learning</title>
+    <title>Solidity学习</title>
     <link href="/2022/04/26/Solidity-Learning/"/>
     <url>/2022/04/26/Solidity-Learning/</url>
     
@@ -13,7 +13,7 @@
     
     <categories>
       
-      <category>Ethereum</category>
+      <category>智能合约</category>
       
     </categories>
     
@@ -29,7 +29,7 @@
   
   
   <entry>
-    <title>VPN</title>
+    <title>VPN机场</title>
     <link href="/2022/04/26/VPN/"/>
     <url>/2022/04/26/VPN/</url>
     
@@ -54,7 +54,7 @@
   
   
   <entry>
-    <title>Interpretation of ERC20</title>
+    <title>ERC20解读</title>
     <link href="/2022/04/25/ERC20/"/>
     <url>/2022/04/25/ERC20/</url>
     
@@ -63,14 +63,14 @@
     
     <categories>
       
-      <category>Ethereum</category>
+      <category>智能合约</category>
       
     </categories>
     
     
     <tags>
       
-      <tag>Contracts</tag>
+      <tag>经典合约解读</tag>
       
     </tags>
     
