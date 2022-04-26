@@ -1,0 +1,547 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Interpretation of the ERC20 token standard">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Interpretation of ERC20">
+<meta property="og:url" content="http://example.com/2022/04/25/ERC20/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Interpretation of the ERC20 token standard">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/IMG/ERC20/ERC20_index-banner.png">
+<meta property="article:published_time" content="2022-04-25T12:11:10.000Z">
+<meta property="article:modified_time" content="2022-04-26T11:29:40.204Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="Contracts">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/IMG/ERC20/ERC20_index-banner.png">
+  
+  
+  <title>Interpretation of ERC20 - Hexo</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.8.14","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Confucian&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                Tags
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/IMG/ERC20/ERC20_index-banner.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Interpretation of ERC20">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2022-04-25 20:11" pubdate>
+        April 25, 2022 pm
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      11k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      94 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Interpretation of ERC20</h1>
+            
+            <div class="markdown-body">
+              <blockquote>
+<p>博客的 Markdown 编辑器暂不支持 Solidity 语法高亮，为了更好阅读代码，可以去 <a target="_blank" rel="noopener" href="https://github.com/Blockchain-Engineer-Learning/Contract-Interpretation/tree/main/ERC20">我的GitHub仓库</a> 。</p>
+</blockquote>
+<h1 id="ERC20解读"><a href="#ERC20解读" class="headerlink" title="ERC20解读"></a>ERC20解读</h1><p>参考 <a target="_blank" rel="noopener" href="https://docs.openzeppelin.com/contracts/4.x/erc20">OpenZepplin文档</a> 和 <a target="_blank" rel="noopener" href="https://ethereum.org/en/developers/docs/standards/tokens/erc-20/">以太坊官方开发者文档</a>，结合自己的理解。</p>
+<h2 id="什么是ERC20"><a href="#什么是ERC20" class="headerlink" title="什么是ERC20"></a>什么是ERC20</h2><p>ERC20（Ethereum Request for Comments 20）一种代币标准。<a target="_blank" rel="noopener" href="https://github.com/ethereum/EIPs/blob/master/EIPS/eip-20.md">EIP-20</a> 中提出。</p>
+<p>ERC20 代币合约追踪同质化（可替代）代币：任何一个代币都完全等同于任何其他代币；没有任何代币具有与之相关的特殊权利或行为。这使得 ERC20 代币可用于交换货币、投票权、质押等。</p>
+<h2 id="为什么要遵守ERC20"><a href="#为什么要遵守ERC20" class="headerlink" title="为什么要遵守ERC20"></a>为什么要遵守ERC20</h2><p>EIP-20 中的动机：</p>
+<blockquote>
+<p>允许以太坊上的任何代币被其他应用程序（从钱包到去中心化交易所）重新使用的标准接口。</p>
+</blockquote>
+<p>以太坊上的所有应用都默认支持 ERC20 ，如果你想自己发币，那么你的代码必须遵循 ERC20 标准，这样钱包（如MetaMask）等应用才能将你的币显示出来。</p>
+<h2 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h2><p>需要实现以下函数和事件：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><div class="code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></div></td><td class="code"><pre><code class="hljs solidity">function name() public view returns (string)<br>function symbol() public view returns (string)<br>function decimals() public view returns (uint8)<br>function totalSupply() public view returns (uint256)<br>function balanceOf(address _owner) public view returns (uint256 balance)<br>function transfer(address _to, uint256 _value) public returns (bool success)<br>function transferFrom(address _from, address _to, uint256 _value) public returns (bool success)<br>function approve(address _spender, uint256 _value) public returns (bool success)<br>function allowance(address _owner, address _spender) public view returns (uint256 remaining)<br><br>event Transfer(address indexed _from, address indexed _to, uint256 _value)<br>event Approval(address indexed _owner, address indexed _spender, uint256 _value)<br></code></pre></td></tr></table></figure>
+
+<p>使用 OpenZeppllin 提供的库能够轻松快速地构建 ERC20 Token 。</p>
+<h3 id="快速构建"><a href="#快速构建" class="headerlink" title="快速构建"></a>快速构建</h3><p>这是一个 GLD token 。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs solidity">// contracts/GLDToken.sol<br>// SPDX-License-Identifier: MIT<br>pragma solidity ^0.8.0;<br><br>import &quot;@openzeppelin/contracts/token/ERC20/ERC20.sol&quot;;<br><br>contract GLDToken is ERC20 &#123;<br>    constructor(uint256 initialSupply) ERC20(&quot;Gold&quot;, &quot;GLD&quot;) &#123;<br>        _mint(msg.sender, initialSupply);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>通常，我们定义代币的发行量和代币名称及符号。</p>
+<h3 id="IERC20"><a href="#IERC20" class="headerlink" title="IERC20"></a>IERC20</h3><p>先来看下 ERC20 的接口（IERC20），这方便我们在开发中直接定义 ERC20 代币。</p>
+<p>同样地，OpenZepplin 为我们提供了相应的库，方便开发者导入即用。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs solidity">import &quot;@openzeppelin/contracts/token/ERC20/IERC20.sol&quot;;<br></code></pre></td></tr></table></figure>
+
+<p><strong>EIP 中定义的 ERC20 标准接口：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs solidity">pragma solidity ^0.8.0;<br><br>interface IERC20 &#123;<br>	event Transfer(address indexed from, address indexed to, uint256 value);<br>	event Approval(address indexed owner, address indexed spender, uint256 value);<br>	<br>	function totalSupply() external view returns (uint256);<br>	function balanceOf(address account) external view returns (uint256);<br>	function transfer(address to, uint256 amount) external returns (bool);<br>	function allowance(address owner, address spender) external view returns (uint256);<br>	function approve(address spender, uint256 amount) external returns (bool);<br>	function transferFrom(<br>		address from,<br>		address to,<br>		uint256 amount<br>	) external returns (bool);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="逐一分析"><a href="#逐一分析" class="headerlink" title="逐一分析"></a>逐一分析</h4><p>函数：</p>
+<ul>
+<li><code>totalSupply()</code> ：返回总共的代币数量。</li>
+<li><code>balanceOf(address account)</code> ：返回 <code>account</code> 地址拥有的代币数量。</li>
+<li><code>transfer(address to, uint256 amount)</code> ：将 <code>amount</code> 数量的代币发送给 <code>to</code> 地址，返回布尔值告知是否执行成功。触发 <code>Transfer</code> 事件。</li>
+<li><code>allowance(address owner, address spender)</code> ：返回授权花费者 <code>spender</code> 通过 <code>transferFrom</code> 代表所有者花费的剩余代币数量。默认情况下为零。当 <code>approve</code> 和 <code>transferFrom</code> 被调用时，值将改变。</li>
+<li><code>approve(address spender, uint256 amount)</code> ：授权 <code>spender</code> 可以花费 <code>amount</code> 数量的代币，返回布尔值告知是否执行成功。触发 <code>Approval</code> 事件。</li>
+<li><code>transferFrom(address from, address to, uint256 amount)</code> ：将 <code>amount</code> 数量的代币从 <code>from</code> 地址发送到 <code>to</code> 地址，返回布尔值告知是否执行成功。触发 <code>Transfer</code> 事件。</li>
+</ul>
+<p>事件（定义中的 <code>indexed</code> 便于查找过滤）：</p>
+<ul>
+<li><code>Transfer(address from, address to, uint256 value)</code> ：当代币被一个地址转移到另一个地址时触发。注意：转移的值可能是 0 。</li>
+<li><code>Approval(address owner, address spender, uint256 value)</code> ：当代币所有者授权别人使用代币时触发，即调用 <code>approve</code> 方法。</li>
+</ul>
+<h4 id="元数据"><a href="#元数据" class="headerlink" title="元数据"></a>元数据</h4><p>一般除了上述必须实现的函数外，还有一些别的方法：</p>
+<ul>
+<li><code>name()</code> ：返回代币名称</li>
+<li><code>symbol()</code> ：返回代币符号</li>
+<li><code>decimals()</code> 返回代币小数点后位数</li>
+</ul>
+<h3 id="ERC20"><a href="#ERC20" class="headerlink" title="ERC20"></a>ERC20</h3><p>来看下 ERC20 代币具体是怎么写的。</p>
+<p>同样，OpenZepplin 提供了现成的合约代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs solidity">import &quot;@openzeppelin/contracts/token/ERC20/ERC20.sol&quot;;<br></code></pre></td></tr></table></figure>
+
+<p>这里贴一个GitHub源码链接 <a target="_blank" rel="noopener" href="https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC20/ERC20.sol">OpenZepplin ERC20</a></p>
+<h4 id="函数概览"><a href="#函数概览" class="headerlink" title="函数概览"></a>函数概览</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs solidity">constructor(name_, symbol_)<br>name()<br>symbol()<br>decimals()<br>totalSupply()<br>balanceOf(account)<br>transfer(to, amount)<br>allowance(owner, spender)<br>approve(spender, amount)<br>transferFrom(from, to, amount)<br>increaseAllowance(spender, addedValue)<br>decreaseAllowance(spender, subtractedValue)<br>_transfer(from, to, amount)<br>_mint(account, amount)<br>_burn(account, amount)<br>_approve(owner, spender, amount)<br>_spendAllowance(owner, spender, amount)<br>_beforeTokenTransfer(from, to, amount)<br>_afterTokenTransfer(from, to, amount)<br></code></pre></td></tr></table></figure>
+
+<p><strong>事件（同 IERC20）</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs solidity">Transfer(from, to, value)<br>Approval(owner, spender, value)<br></code></pre></td></tr></table></figure>
+
+<h4 id="逐一分析-1"><a href="#逐一分析-1" class="headerlink" title="逐一分析"></a>逐一分析</h4><ul>
+<li><code>constructor(string name, string symbol)</code> ：设定代币的名称和符号。<code>decimals</code> 默认是 18 ，要修改成不同的值你应该重载它。这两个值是不变的，只在构造时赋值一次。</li>
+<li><code>name()</code> ：返回代币的名称。</li>
+<li><code>symbol()</code> ：返回代币的符号，通常是名称的缩写。</li>
+<li><code>decimals()</code> ：返回小数点后位数，通常是 18 ，模仿 Ether 和 wei 。要更改就重写它。</li>
+</ul>
+<p><code>totalSupply()、balanceOf(address account)、transfer(address to, uint256 amount)、 allowance(address owner, address spender)、approve(address spender, uint256 amount)、transferFrom(address from, address to, uint256 amount)</code> 都参考 IERC20 。</p>
+<ul>
+<li><p><code>increaseAllowance(address spender, uint256 addedValue)</code> ：以原子的方式增加 <code>spender</code> 额度。返回布尔值告知是否执行成功，触发 <code>Approval</code> 事件。</p>
+</li>
+<li><p><code>_transfer(address from, address to, uint256 amount)</code> ：转账。这个内部函数相当于 <code>transfer</code> ，可以用于例如实施自动代币费用，削减机制等。触发 <code>Transfer</code> 事件。</p>
+</li>
+<li><p><code>_mint(address account, uint256 amount)</code> ：铸造 <code>amount</code> 数量的代币给 <code>account</code> 地址，增加总发行量。触发 <code>Transfer</code> 事件，其中参数 <code>from</code> 是零地址。</p>
+</li>
+<li><p><code>_burn(address account, uint256 amount)</code> ：从 <code>account</code> 地址中烧毁 <code>amount</code> 数量的代币，减少总发行量。触发 <code>Transfer</code> 事件，其中参数 <code>to</code> 是零地址。</p>
+</li>
+<li><p><code>_approve(address owner, uint256 spender, uint256 amount)</code> ：设定允许 <code>spender</code> 花费 <code>owner</code> 的代币数量。这个内部函数相当于 <code>approve</code> ，可以用于例如为某些子系统设置自动限额等。</p>
+</li>
+<li><p><code>spendAllowance(address owner, address spender, uint256 amount)</code> ：花费 <code>amount</code> 数量的 <code>owner</code> 授权 <code>spender</code> 的代币。在无限 allowance 的情况下不更新 allowance 金额。如果没有足够的余量，则恢复。可能触发 <code>Approval</code> 事件。</p>
+</li>
+<li><p><code>_beforeTokenTransfer(address from, address to, uint256 amount)</code> ：在任何代币转账前的 Hook 。它包括铸币和烧毁。调用条件：</p>
+<ul>
+<li>当 <code>from</code> 和 <code>to</code> 都不是零地址时，<code>from</code> 手里 <code>amount</code> 数量的代币将发送给 <code>to</code> 。</li>
+<li>当 <code>from</code> 是零地址时，将给 <code>to</code> 铸造 <code>amount</code> 数量的代币。</li>
+<li>当 <code>to</code> 是零地址时，<code>from</code> 手里 <code>amount</code> 数量的代币将被烧毁。</li>
+<li><code>from</code> 和 <code>to</code> 不能同时为零地址。</li>
+</ul>
+</li>
+<li><p><code>_afterTokenTransfer(address from, address to, uint256 amount)</code> ：在任何代币转账后的 Hook 。它包括铸币和烧毁。调用条件：</p>
+<ul>
+<li>当 <code>from</code> 和 <code>to</code> 都不是零地址时，<code>from</code> 手里 <code>amount</code> 数量的代币将发送给 <code>to</code> 。</li>
+<li>当 <code>from</code> 是零地址时，将给 <code>to</code> 铸造 <code>amount</code> 数量的代币。</li>
+<li>当 <code>to</code> 是零地址时，<code>from</code> 手里 <code>amount</code> 数量的代币将被烧毁。</li>
+<li><code>from</code> 和 <code>to</code> 不能同时为零地址。</li>
+</ul>
+</li>
+</ul>
+<h4 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h4><p>ERC20 代码中的 <code>_transfer</code>、<code>_mint</code>、<code>_burn</code>、<code>_approve</code>、<code>_spendAllowance</code>、<code>_beforeTokenTransfer</code>、<code>_afterTokenTransfer</code> 都是 <code>internal</code> 函数（其余为 <code>public</code> ），也就是说它们只能被派生合约调用。</p>
+<h2 id="从零开始，自己动手"><a href="#从零开始，自己动手" class="headerlink" title="从零开始，自己动手"></a>从零开始，自己动手</h2><h3 id="1-编写IERC20"><a href="#1-编写IERC20" class="headerlink" title="1.编写IERC20"></a>1.编写IERC20</h3><p><a target="_blank" rel="noopener" href="https://github.com/Blockchain-Engineer-Learning/Contract-Interpretation/blob/main/ERC20/contracts/IERC20.sol">IERC20.sol</a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs solidity">// SPDX-License-Identifier: MIT<br><br>pragma solidity ^0.8.0;<br><br>interface IERC20 &#123;<br>    /// @dev 总发行量<br>    function totoalSupply() external view returns (uint256);<br>    /// @dev 查看地址余额<br>    function balanceOf(address account) external view returns (uint256);<br>    /// @dev 单地址转账<br>    function transfer(address account, uint256 amount) external returns (bool);<br>    /// @dev 查看被授权人代表所有者花费的代币余额<br>    function allowance(address owner, address spender) external view returns (uint256);<br>    /// @dev 授权别人花费你拥有的代币<br>    function approve(address spender, uint256 amount) external returns (bool);<br>    /// @dev 双地址转账<br>    function transferFrom(<br>        address from,<br>        address to,<br>        uint256 amount<br>    ) external returns (bool);<br><br>    /// @dev 发生代币转移时触发<br>    event Transfer(address indexed from, address indexed to, uint256 value);<br>    /// @dev 授权时触发<br>    event Approval(address indexed owner, address indexed spender, uint256 value);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="2-加上Metadata"><a href="#2-加上Metadata" class="headerlink" title="2.加上Metadata"></a>2.加上Metadata</h3><p><a target="_blank" rel="noopener" href="https://github.com/Blockchain-Engineer-Learning/Contract-Interpretation/blob/main/ERC20/contracts/IERC20Metadata.sol">IERC20Metadata.sol</a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs solidity">// SPDX-License-Identifier: MIT<br><br>pragma solidity ^0.8.0;<br><br>import &quot;IERC20.sol&quot;;<br><br>interface IERC20Metadata is IERC20 &#123;<br>    /// @dev 代币名称<br>    function name() external view returns (string memory);<br>    /// @dev 代币符号<br>    function symbol() external view returns (string memory);<br>    /// @dev 小数点后位数<br>    function decimals() external view returns (uint8);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="3-编写ERC20"><a href="#3-编写ERC20" class="headerlink" title="3.编写ERC20"></a>3.编写ERC20</h3><p><a target="_blank" rel="noopener" href="https://github.com/Blockchain-Engineer-Learning/Contract-Interpretation/blob/main/ERC20/contracts/ERC20.sol">ERC20.sol</a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br></pre></td><td class="code"><pre><code class="hljs solidity">// SPDX-License-Identifier: MIT<br><br>pragma solidity ^0.8.0;<br><br>import &quot;./IERC20.sol&quot;;<br>import &quot;./IERC20Metadata.sol&quot;;<br><br>contract ERC20 is IERC20, IERC30Metadata &#123;<br>    // 地址余额<br>    mapping(address =&gt; uint256) private _balances;<br>    // 授权地址余额<br>    mapping(address =&gt; mapping(address =&gt; uint256)) private _allowances;<br><br>    uint256 private _totalSupply;<br><br>    string private _name;<br>    string private _symbol;<br><br>    /// @dev 设定代币名称符号<br>    constructor(string memory name_, string memory symbol_) &#123;<br>        _name = name_;<br>        _symbol = symbol_;<br>    &#125;<br><br>    function name() public view virtual override returns (string memory) &#123;<br>        return _name;<br>    &#125;<br><br>    function symbol() public view virtual override returns (string memory) &#123;<br>        return _symbol;<br>    &#125;<br><br>    /// @dev 小数点位数一般为 18<br>    function decimals() public view virtual override returns (uint8) &#123;<br>        return 18;<br>    &#125;<br><br>    function totalSupply() public view virtual  override returns (uint256) &#123;<br>        return _totalSupply;<br>    &#125;<br><br>    function balanceOf(address account) public view virtual override returns (uint256) &#123;<br>        return _balances[account];<br>    &#125;<br><br>    function transfer(address to, uint256 amount) public virtual override returns (bool) &#123;<br>        address owner = msg.sender;<br>        _transfer(owner, to, amount);<br>        return true;<br>    &#125;<br><br>    function allowance(address owner, address spender) public view virtual override returns (uint256) &#123;<br>        return _allowances[owner][spender];<br>    &#125;<br><br>    function approve(address spender, uint256 amount) public virtual override returns (bool) &#123;<br>        address owner = msg.sender;<br>        _approve(owner, spender, amount);<br>        return true;<br>    &#125;<br><br>    function transferFrom(<br>        address from,<br>        address to,<br>        uint256 amount<br>    ) public virtual override returns (bool) &#123;<br>        address spender = msg.sender;<br>        _spendAllowance(from, spender, amount);<br>        _transfer(from, to, amount);<br>        return true;<br>    &#125;<br><br>    function increaseAllowance(address spender, uint256 addedValue) public virtual returns (bool) &#123;<br>        address owner = msg.sender;<br>        _approve(owner, spender, _allowances[owner][spender] + addedValue);<br>        return true;<br>    &#125;<br><br>    function decreaseAllowance(address spender, uint256 substractedValue) public virtual returns (bool) &#123;<br>        address owner = msg.sender;<br>        uint256 currentAllowance = _allowances[owner][spender];<br>        require(currentAllowance &gt;= substractedValue, &quot;ERC20: decreased allowance below zero&quot;);<br>        unchecked &#123;<br>            _approval(owner, spender, currentAllowance - substractedValue);<br>        &#125;<br>        return true;<br>    &#125;<br><br>    function _transfer(<br>        address from,<br>        address to,<br>        uint256 amount<br>    ) internal virtual &#123;<br>        require(from != address(0), &quot;ERC20: transfer from the zero address&quot;);<br>        require(to != address(0), &quot;ERC20: transfer to the zero address&quot;);<br><br>        _beforeTokenTransfer(from, to, amount);<br><br>        uint256 fromBalance = _balances[from];<br>        require(fromBalance &gt;= amount, &quot;ERC20: transfer amount exceeds balance&quot;);<br>        unchecked &#123;<br>            _balances[from] = fromBalance - amount;<br>        &#125;<br>        _balances[to] += amount;<br><br>        emit Transfer(from, to, amount);<br><br>        _afterTokenTransfer(from, to, amount);<br>    &#125;<br><br>    function _mint(address account, uint256 amount) internal virtual &#123;<br>        require(account != address(0), &quot;ERC20: mint to the zero address&quot;);<br><br>        _beforeTokenTransfer(address(0), account, amount);<br><br>        _totalSupply += amount;<br>        _balances[account] += amount;<br>        emit Transfer(address(0), account, amount);<br><br>        _afterTokenTransfer(address(0), account, amount);<br>    &#125;<br><br>    function _burn(address account, uint256 amount) internal virtual &#123;<br>        require(account != address(0), &quot;ERC20: burn from the zero address&quot;);<br><br>        _beforeTokenTransfer(account, address(0), amount);<br><br>        uint256 accountBalance = _balances[account];<br>        require(accountBalance &gt;= amount, &quot;ERC20: burn amount exceeds balance&quot;);<br>        unchecked &#123;<br>            _balances[account] = accountBalance - amount;<br>        &#125;<br>        _totalSupply -= amount;<br><br>        emit Transfer(account, address(0), amount);<br><br>        _afterTokenTransfer(account, address(0), amount);<br>    &#125;<br><br>    function _approve(<br>        address owner,<br>        address spender,<br>        uint256 amount<br>    ) internal virtual &#123;<br>        require(owner != address(0), &quot;ERC20: approve from the zero address&quot;);<br>        require(spender != address(0), &quot;ERC20: approve  to the zero address&quot;);<br><br>        _allowances[owner][spender];<br>        emit Approval(owner, spender, amount);<br>    &#125;<br><br>    function _spendAllowance(<br>        address owner,<br>        address spender,<br>        uint256 amount<br>    ) internal virtual &#123;<br>        uint256 currentAllowance = allowance(owner, spender);<br>        if (currentAllowance != type(uint256).max) &#123;<br>            require(currentAllowance &gt;= amount, &quot;ERC20: insufficient allowance&quot;);<br>            unchecked &#123;<br>                _approve(owner, spender, currentAllowance - amount);<br>            &#125;<br>        &#125;<br>    &#125;<br><br>    function _beforeTokenTransfer(<br>        address from,<br>        address to,<br>        uint256 amount<br>    ) internal virtual &#123;&#125;<br><br>    function _afterTokenTransfer(<br>        address from,<br>        address to,<br>        uint256 amount<br>    ) internal virtual &#123;&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>ERC20 其实就是一种最常见的代币标准，它明确了同质化代币的经典功能并规范了开发者编写 token 时的代码，从而方便各种应用适配。</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Ethereum/">Ethereum</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Contracts/">Contracts</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/04/26/VPN/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">VPN</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>
